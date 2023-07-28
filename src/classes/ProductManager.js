@@ -1,5 +1,6 @@
 import fs from "fs";
 import { Product } from "./Product.js";
+import { DuplicatedError, ProductNotFound } from "../utils/errors.js";
 
 export class ProductManager {
     constructor() {
@@ -47,7 +48,7 @@ export class ProductManager {
             });
 
             if (sameCode) {
-                throw new Error("Duplicated Product");
+                throw new DuplicatedError("Duplicated Product");
             }
 
             const product = new Product(
@@ -66,8 +67,8 @@ export class ProductManager {
             this.products.push(product);
             await this.#saveToFile();
         } catch (error) {
-            if (error.message === "Duplicated Product") {
-                throw new Error("Duplicated Product");
+            if (error instanceof DuplicatedError) {
+                throw error;
             }
             throw new Error("Error: Failed to add the new product");
         }
@@ -77,11 +78,21 @@ export class ProductManager {
         await this.#loadFromFile();
         return this.products;
     }
-    getProductById(id) {
-        return (
-            this.products.find((product) => product.id === Number(id)) ||
-            "Not Found"
-        );
+    async getProductById(id) {
+        try {
+            await this.#loadFromFile();
+            const product = this.products.find(
+                (product) => product.id === Number(id)
+            );
+            if (!product) {
+                throw new ProductNotFound(`Product with ID ${id} not found`);
+            }
+            return product;
+        } catch (error) {
+            if (error instanceof ProductNotFound) {
+                throw error;
+            }
+        }
     }
 
     async updateProduct(id, newData) {
@@ -93,7 +104,7 @@ export class ProductManager {
             );
 
             if (!productToUpdate) {
-                throw new Error("Not Found");
+                throw new ProductNotFound("Not Found");
             }
 
             const validKeys = [
@@ -118,8 +129,8 @@ export class ProductManager {
             await this.#saveToFile();
             return productToUpdate;
         } catch (error) {
-            if (error.message === "Not Found") {
-                throw new Error("Not Found");
+            if (error instanceof ProductNotFound) {
+                throw error;
             }
             throw new Error("Failed to update the product");
         }

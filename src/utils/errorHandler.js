@@ -1,8 +1,8 @@
-class HandlerError extends Error {
-    constructor(message, statusCode) {
-        super(message);
-        this.name = this.constructor.name;
-        this.statusCode = statusCode;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
+export const errorFactory = function (name) {
+    return class HandlerError extends Error {
+        constructor(message) {
+            super(message);
+            this.name = name;
+        }
+    };
+};
