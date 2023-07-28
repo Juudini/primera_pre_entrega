@@ -1,6 +1,15 @@
 import fs from "fs";
 import { Product } from "./Product.js";
-import { DuplicatedError, ProductNotFound } from "../utils/errors.js";
+import {
+    DeleteProductError,
+    DuplicatedError,
+    GetProductByIdError,
+    GetProductError,
+    LoadFromFileError,
+    ProductNotFoundError,
+    SaveToFileError,
+    UpdateProductError,
+} from "../utils/errors.js";
 
 export class ProductManager {
     constructor() {
@@ -12,12 +21,15 @@ export class ProductManager {
             if (fs.existsSync(this.path)) {
                 const data = await fs.promises.readFile(this.path, "utf8");
                 this.products = data.trim() ? JSON.parse(data) : [];
-            } else {
-                await fs.promises.writeFile(this.path, "[]");
-                this.products = [];
+                return;
             }
+            await fs.promises.writeFile(this.path, "[]");
+            this.products = [];
         } catch (error) {
-            throw new Error("Error loading products from file:", error);
+            throw new LoadFromFileError(
+                "Failed to loading products from file:",
+                error
+            );
         }
     }
 
@@ -27,7 +39,10 @@ export class ProductManager {
             await fs.promises.writeFile(this.path, data);
             console.log("Products have been saved to file.");
         } catch (error) {
-            throw new Error("Error saving products to file.");
+            throw new SaveToFileError(
+                "Failed to saving products to file.",
+                error
+            );
         }
     }
     #nextId() {
@@ -66,17 +81,29 @@ export class ProductManager {
 
             this.products.push(product);
             await this.#saveToFile();
+            return { message: "Product has been successfully added" };
         } catch (error) {
-            if (error instanceof DuplicatedError) {
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof DuplicatedError) {
+                throw error;
+            } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new Error("Error: Failed to add the new product");
+            throw new GetProductError("Failed to add the new product", error);
         }
     }
 
     async getProducts() {
-        await this.#loadFromFile();
-        return this.products;
+        try {
+            await this.#loadFromFile();
+            return this.products;
+        } catch (error) {
+            if (error instanceof LoadToFileError) {
+                throw error;
+            }
+            throw new GetProductError("Failed to get product");
+        }
     }
     async getProductById(id) {
         try {
@@ -85,13 +112,18 @@ export class ProductManager {
                 (product) => product.id === Number(id)
             );
             if (!product) {
-                throw new ProductNotFound(`Product with ID ${id} not found`);
+                throw new ProductNotFound(
+                    `Product with ID ${Number(id)} not found`
+                );
             }
             return product;
         } catch (error) {
-            if (error instanceof ProductNotFound) {
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof ProductNotFound) {
                 throw error;
             }
+            throw new GetProductByIdError("Failed to get product by id", error);
         }
     }
 
@@ -104,7 +136,7 @@ export class ProductManager {
             );
 
             if (!productToUpdate) {
-                throw new ProductNotFound("Not Found");
+                throw new ProductNotFoundError("Not Found");
             }
 
             const validKeys = [
@@ -127,12 +159,16 @@ export class ProductManager {
             Object.assign(productToUpdate, updatedData);
 
             await this.#saveToFile();
-            return productToUpdate;
+            return { message: "Product has been successfully updated" };
         } catch (error) {
-            if (error instanceof ProductNotFound) {
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof ProductNotFoundError) {
+                throw error;
+            } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new Error("Failed to update the product");
+            throw new UpdateProductError("Failed to update the product", error);
         }
     }
 
@@ -143,17 +179,22 @@ export class ProductManager {
                 (product) => product.id === Number(id)
             );
             if (index === -1) {
-                throw new Error("Not Found");
+                throw new ProductNotFoundError("Not Found");
             }
 
             this.products.splice(index, 1);
 
             await this.#saveToFile();
+            return { message: "Product has been deleted successfully" };
         } catch (error) {
-            if (error.message === "Not Found") {
-                throw new Error("Not Found");
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof ProductNotFoundError) {
+                throw error;
+            } else if (error instanceof SaveToFileError) {
+                throw error;
             }
-            throw new Error("Error: Failed to delete the product");
+            throw new DeleteProductError("Failed to delete the product", error);
         }
     }
 }

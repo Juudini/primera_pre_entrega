@@ -19,14 +19,6 @@
     "stock": 55
   },
   {
-    "id": 3,
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentssidna",
-    "stock": 55
-  },
-  {
     "id": 4,
     "title": "Bebida prueba",
     "description": "prueba",
@@ -85,6 +77,17 @@
     "title": "Nueva prueba",
     "description": "Nueva prueba",
     "code": "kss",
+    "price": 1812,
+    "status": true,
+    "stock": 15,
+    "category": "nosee",
+    "thumbnail": []
+  },
+  {
+    "id": 12,
+    "title": "Nueva prueba",
+    "description": "Nueva prueba",
+    "code": "ksssss",
     "price": 1812,
     "status": true,
     "stock": 15,

@@ -1,6 +1,6 @@
 import { ProductManager } from "../classes/ProductManager.js";
-import { DuplicatedError } from "../utils/errors.js";
-import { ProductNotFound } from "../utils/errors.js";
+import { DuplicatedError, ProductNotFoundError } from "../utils/errors.js";
+
 const manager = new ProductManager();
 // Obtener todos los productos o los primeros por "limit" productos
 //~> |GET
@@ -22,11 +22,11 @@ export const getProductById = async (req, res) => {
         const productId = req.params.pid;
         const product = await manager.getProductById(productId);
         if (!product) {
-            throw new ProductNotFound("Product not found");
+            throw new ProductNotFoundError("Product not found");
         }
         res.send(product);
     } catch (error) {
-        if (error instanceof ProductNotFound) {
+        if (error instanceof ProductNotFoundError) {
             return res.status(400).json({ message: "Product not found" });
         }
         return res.status(500).json({ message: "Something went wrong" });
@@ -38,8 +38,8 @@ export const getProductById = async (req, res) => {
 export const addProduct = async (req, res) => {
     try {
         const newProduct = req.body;
-        await manager.addProduct(newProduct);
-        res.json({ message: "Product has been successfully added" });
+        const response = await manager.addProduct(newProduct);
+        res.json(response);
     } catch (error) {
         if (error instanceof DuplicatedError) {
             return res.status(400).json({ message: "Duplicated Product" });
@@ -54,12 +54,11 @@ export const updateProduct = async (req, res) => {
     try {
         const productId = req.params.pid;
         const newData = req.body;
+        const response = await manager.updateProduct(productId, newData);
 
-        await manager.updateProduct(productId, newData);
-
-        res.json({ message: "Product has been successfully updated" });
+        res.json(response);
     } catch (error) {
-        if (error.message === "Not Found") {
+        if (error instanceof ProductNotFoundError) {
             return res.status(404).json({ message: "Product not found" });
         }
         return res.status(500).json({ message: "Something went wrong" });
@@ -71,8 +70,9 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.pid;
-        await manager.deleteProduct(productId);
-        res.send({ message: "Product has been deleted successfully" });
+        const response = await manager.deleteProduct(productId);
+
+        res.send(response);
     } catch (error) {
         if (error instanceof ProductNotFound) {
             return res.status(404).json({ message: "Product not found" });
