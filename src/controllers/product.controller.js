@@ -1,5 +1,8 @@
 import { ProductManager } from "../classes/ProductManager.js";
-import { DuplicatedError, ProductNotFoundError } from "../utils/errors.js";
+import {
+    DuplicatedProductError,
+    ProductNotFoundError,
+} from "../utils/errors.js";
 
 const manager = new ProductManager();
 // Obtener todos los productos o los primeros por "limit" productos
@@ -9,6 +12,7 @@ export const getProducts = async (req, res) => {
         const productsAll = await manager.getProducts();
         const limit = req.query.limit || productsAll.length;
         const limitedProducts = productsAll.slice(0, limit);
+
         res.json(limitedProducts);
     } catch {
         return res.status(500).json({ message: "Something went wrong" });
@@ -24,6 +28,7 @@ export const getProductById = async (req, res) => {
         if (!product) {
             throw new ProductNotFoundError("Product not found");
         }
+
         res.send(product);
     } catch (error) {
         if (error instanceof ProductNotFoundError) {
@@ -39,9 +44,10 @@ export const addProduct = async (req, res) => {
     try {
         const newProduct = req.body;
         const response = await manager.addProduct(newProduct);
+
         res.json(response);
     } catch (error) {
-        if (error instanceof DuplicatedError) {
+        if (error instanceof DuplicatedProductError) {
             return res.status(400).json({ message: "Duplicated Product" });
         }
         return res.status(500).json({ message: "Something went wrong" });
@@ -74,7 +80,7 @@ export const deleteProduct = async (req, res) => {
 
         res.send(response);
     } catch (error) {
-        if (error instanceof ProductNotFound) {
+        if (error instanceof ProductNotFoundError) {
             return res.status(404).json({ message: "Product not found" });
         }
         return res.status(500).json({ message: "Something went wrong" });

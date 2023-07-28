@@ -1,8 +1,8 @@
 import fs from "fs";
 import { Product } from "./Product.js";
 import {
+    DuplicatedProductError,
     DeleteProductError,
-    DuplicatedError,
     GetProductByIdError,
     GetProductError,
     LoadFromFileError,
@@ -63,7 +63,7 @@ export class ProductManager {
             });
 
             if (sameCode) {
-                throw new DuplicatedError("Duplicated Product");
+                throw new DuplicatedProductError("Duplicated Product");
             }
 
             const product = new Product(
@@ -85,7 +85,7 @@ export class ProductManager {
         } catch (error) {
             if (error instanceof LoadFromFileError) {
                 throw error;
-            } else if (error instanceof DuplicatedError) {
+            } else if (error instanceof DuplicatedProductError) {
                 throw error;
             } else if (error instanceof SaveToFileError) {
                 throw error;

@@ -1,6 +1,6 @@
 import { errorFactory } from "./errorHandler.js";
 
-export const DuplicatedError = errorFactory("DuplicatedError");
+export const DuplicatedProductError = errorFactory("DuplicatedProductError");
 export const ProductNotFoundError = errorFactory("ProductNotFound");
 export const DeleteProductError = errorFactory("DeleteProductError");
 export const UpdateProductError = errorFactory("UpdateProductError");
