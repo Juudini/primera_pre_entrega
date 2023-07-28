@@ -1,26 +1,40 @@
 export class Product {
-    constructor(title, description, price, thumbnail, code, stock) {
+    constructor(
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category,
+        thumbnail
+    ) {
         if (
             typeof title !== "string" ||
             title.trim() === "" ||
             typeof description !== "string" ||
             description.trim() === "" ||
+            typeof code !== "string" ||
             typeof price !== "number" ||
             isNaN(price) ||
-            typeof thumbnail !== "string" ||
-            typeof code !== "string" ||
             code.trim() === "" ||
+            typeof status !== "boolean" ||
             typeof stock !== "number" ||
-            isNaN(stock)
+            typeof category !== "string" ||
+            isNaN(stock) ||
+            !Array.isArray(thumbnail) ||
+            !thumbnail.every((item) => typeof item === "string")
         ) {
             throw new Error("Error: Invalid argument values");
         }
         this.id = 0;
         this.title = title;
         this.description = description;
-        this.price = price;
-        this.thumbnail = thumbnail;
         this.code = code;
+        this.price = price;
+        this.status = status;
         this.stock = stock;
+        this.category = category;
+        this.thumbnail = thumbnail;
     }
 }

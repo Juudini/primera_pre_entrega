@@ -53,10 +53,12 @@ export class ProductManager {
             const product = new Product(
                 newProduct.title,
                 newProduct.description,
-                newProduct.price,
-                newProduct.thumbnail,
                 newProduct.code,
-                newProduct.stock
+                newProduct.price,
+                newProduct.status,
+                newProduct.stock,
+                newProduct.category,
+                newProduct.thumbnail
             );
 
             product.id = this.#nextId() + 1;
@@ -97,10 +99,12 @@ export class ProductManager {
             const validKeys = [
                 "title",
                 "description",
-                "price",
-                "thumbnail",
                 "code",
+                "price",
+                "status",
                 "stock",
+                "category",
+                "thumbnail",
             ];
 
             const updatedData = Object.fromEntries(
