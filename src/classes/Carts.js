@@ -48,12 +48,10 @@ export class Carts {
     async addProduct(product) {
         try {
             await this.#loadFromFile();
-            const existingProduct = this.products.find(
-                (p) => p.id === product.id
-            );
+            const existingCart = this.products.find((p) => p.id === product.id);
 
-            if (existingProduct) {
-                existingProduct.quantity += product.quantity;
+            if (existingCart) {
+                existingCart.quantity += product.quantity;
             } else {
                 this.products.push({
                     id: (product.id = this.#nextId + 1),
