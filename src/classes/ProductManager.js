@@ -27,7 +27,7 @@ export class ProductManager {
             this.products = [];
         } catch (error) {
             throw new LoadFromFileError(
-                "Failed to loading products from file:",
+                "Failed to load products from file",
                 error
             );
         }
@@ -39,10 +39,7 @@ export class ProductManager {
             await fs.promises.writeFile(this.path, data);
             console.log("Products have been saved to file.");
         } catch (error) {
-            throw new SaveToFileError(
-                "Failed to saving products to file.",
-                error
-            );
+            throw new SaveToFileError("Failed to save products to file", error);
         }
     }
     #nextId() {
@@ -52,7 +49,7 @@ export class ProductManager {
                 maxId = product.id;
             }
         }
-        return maxId;
+        return maxId + 1;
     }
 
     async addProduct(newProduct) {
@@ -76,8 +73,8 @@ export class ProductManager {
                 newProduct.category,
                 newProduct.thumbnail
             );
-
-            product.id = this.#nextId() + 1;
+            product.status = true;
+            product.id = this.#nextId();
 
             this.products.push(product);
             await this.#saveToFile();
@@ -102,7 +99,7 @@ export class ProductManager {
             if (error instanceof LoadToFileError) {
                 throw error;
             }
-            throw new GetProductError("Failed to get product");
+            throw new GetProductError("Failed to get products", error);
         }
     }
     async getProductById(id) {
