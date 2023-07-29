@@ -1,37 +1,26 @@
-import { Carts } from "../classes/Carts.js";
-const cart = new Carts();
-
-export const getCart = async (req, res) => {
-    try {
-        const product = await cart.getProducts();
-        res.send(product);
-    } catch (error) {
-        return res.status(500).json({
-            message: "Something goes wrong",
-        });
-    }
-};
+import { CartManager } from "../classes/CartManager.js";
+import { CartNotFoundError } from "../utils/errors.js";
+const cart = new CartManager();
 
 export const getCartById = async (req, res) => {
     try {
-        const productCartId = parseInt(req.params.pid);
-        const productCard = await cart.getProductById(productCartId);
-
-        if (productCard === "Not Found")
-            return res.status(404).json({ message: "Product not found" });
-        res.send(productCard);
+        const cartId = req.params.cid;
+        const responseCart = await cart.getCartById(cartId);
+        res.send(responseCart);
     } catch (error) {
+        if (error instanceof CartNotFoundError) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
         return res.status(500).json({
             message: "Something goes wrong",
         });
     }
 };
 
-export const postCartProduct = async (req, res) => {
+export const createCart = async (req, res) => {
     try {
-        const { id, quantity } = req.body;
-        const product = await cart.addProduct(quantity);
-        res.send(product);
+        const response = await cart.addNewCart();
+        res.json(response);
     } catch (error) {
         return res.status(500).json({
             message: "Something goes wrong",
