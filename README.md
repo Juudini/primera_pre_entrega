@@ -5,13 +5,13 @@ Follow the steps below to set up and run the application in your local environme
 1. Clone this repository to your local machine:
 
 ```
-git clone https://github.com/Juudini/CODERHOUSE_BACKEND
+git clone https://github.com/Juudini/primera_pre_entrega
 ```
 
 2. Navigate to the project directory:
 
 ```
-cd CODERHOUSE_BACKEND
+cd primera_pre_entrega
 ```
 
 3. Install project dependencies:
