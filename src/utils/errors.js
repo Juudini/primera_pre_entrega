@@ -13,5 +13,5 @@ export const LoadFromFileError = errorFactory("LoadFromFileError");
 
 // Carts Errors
 export const GetCartByIdError = errorFactory("GetCartByIdError");
-export const AddNewCartError = errorFactory("AddNewCartError");
+export const CreateCartError = errorFactory("CreateCartError");
 export const CartNotFoundError = errorFactory("CartNotFoundError");
