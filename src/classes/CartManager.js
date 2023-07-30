@@ -1,11 +1,13 @@
 import fs from "fs";
 import {
-    AddNewCartError,
+    CreateCartError,
+    CartNotFoundError,
     GetCartByIdError,
     LoadFromFileError,
     SaveToFileError,
 } from "../utils/errors.js";
 import { Cart } from "./Cart.js";
+import { ProductManager } from "./ProductManager.js";
 
 export class CartManager {
     constructor() {
@@ -50,7 +52,7 @@ export class CartManager {
         }
     }
 
-    async addNewCart() {
+    async createCart() {
         try {
             await this.#loadFromFile();
             const newCartId = this.#nextId();
@@ -64,7 +66,7 @@ export class CartManager {
             } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new AddNewCartError("Failed to add new cart", error);
+            throw new CreateCartError("Failed to create cart", error);
         }
     }
 
@@ -83,6 +85,55 @@ export class CartManager {
                 throw error;
             }
             throw new GetCartByIdError("Failed to get cart by id", error);
+        }
+    }
+
+    async addProductToCart(cartId, productId) {
+        const manager = new ProductManager();
+        try {
+            await this.#loadFromFile();
+            const cart = await this.getCartById(cartId);
+            const producto = await manager.getProductById(productId);
+
+            const existingProductIndex = cart.products.findIndex(
+                (item) => item.id === producto.id
+            );
+
+            if (existingProductIndex !== -1) {
+                cart.products[existingProductIndex].quantity += 1;
+            } else {
+                const dataProduct = {
+                    id: producto.id,
+                    quantity: 1,
+                };
+                cart.products.push(dataProduct);
+            }
+
+            await this.#saveToFile();
+
+            return { message: "PRODUCTO TO CART has been added successfully" };
+        } catch (error) {
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof ProductNotFoundError) {
+                throw error;
+            }
+        }
+    }
+    async getProductsInCart(id) {
+        try {
+            const cart = await this.getCartById(id);
+
+            if (!cart) {
+                throw new CartNotFoundError("Cart not found");
+            }
+            return cart.products;
+        } catch (error) {
+            if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof CartNotFoundError) {
+                throw error;
+            }
         }
     }
 }
