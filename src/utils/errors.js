@@ -1,7 +1,7 @@
 import { errorFactory } from "./errorHandler.js";
 
 // Products Errors
-
+export const InvalidArgValuesError = errorFactory("InvalidArgValuesError");
 export const DuplicatedProductError = errorFactory("DuplicatedProductError");
 export const ProductNotFoundError = errorFactory("ProductNotFound");
 export const DeleteProductError = errorFactory("DeleteProductError");
@@ -15,3 +15,4 @@ export const LoadFromFileError = errorFactory("LoadFromFileError");
 export const GetCartByIdError = errorFactory("GetCartByIdError");
 export const CreateCartError = errorFactory("CreateCartError");
 export const CartNotFoundError = errorFactory("CartNotFoundError");
+export const EmptyCartError = errorFactory("EmptyCartError");
