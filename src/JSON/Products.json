@@ -1,97 +1,132 @@
 [
   {
     "id": 1,
-    "title": "aaa",
-    "description": "prueba",
-    "price": 80,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentinaass",
-    "stock": 5,
-    "hablar": "argentinaass"
+    "title": "Book Title 1",
+    "description": "Description for Book 1",
+    "code": "B1C1",
+    "price": 19.99,
+    "status": true,
+    "stock": 50,
+    "category": "Fiction",
+    "thumbnail": [
+      "https://example.com/book1.jpg"
+    ]
   },
   {
     "id": 2,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentinas",
-    "stock": 55
+    "title": "Book Title 2",
+    "description": "Description for Book 2",
+    "code": "B2C2",
+    "price": 15.5,
+    "status": true,
+    "stock": 30,
+    "category": "Fantasy",
+    "thumbnail": [
+      "https://example.com/book2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Book Title 3",
+    "description": "Description for Book 3",
+    "code": "B3C3",
+    "price": 12.75,
+    "status": true,
+    "stock": 20,
+    "category": "Mystery",
+    "thumbnail": [
+      "https://example.com/book3.jpg"
+    ]
   },
   {
     "id": 4,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentinaass",
-    "stock": 55
+    "title": "Book Title 4",
+    "description": "Description for Book 4",
+    "code": "B4C4",
+    "price": 21,
+    "status": true,
+    "stock": 25,
+    "category": "Science Fiction",
+    "thumbnail": [
+      "https://example.com/book4.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Book Title 5",
+    "description": "Description for Book 5",
+    "code": "B5C5",
+    "price": 18.5,
+    "status": true,
+    "stock": 40,
+    "category": "Romance",
+    "thumbnail": [
+      "https://example.com/book5.jpg"
+    ]
   },
   {
     "id": 6,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argent",
-    "stock": 55
+    "title": "Book Title 6",
+    "description": "Description for Book 6",
+    "code": "B6C6",
+    "price": 17.25,
+    "status": true,
+    "stock": 15,
+    "category": "Thriller",
+    "thumbnail": [
+      "https://example.com/book6.jpg"
+    ]
   },
   {
     "id": 7,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentina",
-    "stock": 55
+    "title": "Book Title 7",
+    "description": "Description for Book 7",
+    "code": "B7C7",
+    "price": 20.99,
+    "status": true,
+    "stock": 10,
+    "category": "Biography",
+    "thumbnail": [
+      "https://example.com/book7.jpg"
+    ]
   },
   {
     "id": 8,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prufsdfsdfsdeba.jpg",
-    "code": "argentisna",
-    "stock": 55
+    "title": "Book Title 8",
+    "description": "Description for Book 8",
+    "code": "B8C8",
+    "price": 14.75,
+    "status": true,
+    "stock": 35,
+    "category": "History",
+    "thumbnail": [
+      "https://example.com/book8.jpg"
+    ]
   },
   {
     "id": 9,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prdfsdfsdfsdeba.jpg",
-    "code": "argentiddsssna",
-    "stock": 55
+    "title": "Book Title 9",
+    "description": "Description for Book 9",
+    "code": "B9C9",
+    "price": 23.5,
+    "status": true,
+    "stock": 12,
+    "category": "Poetry",
+    "thumbnail": [
+      "https://example.com/book9.jpg"
+    ]
   },
   {
     "id": 10,
-    "title": "Bebida prueba",
-    "description": "prueba",
-    "price": 100,
-    "thumbnail": "prdfsdfsdfsdeba.jpg",
-    "code": "argentiddssssna",
-    "stock": 55
-  },
-  {
-    "id": 11,
-    "title": "Nueva prueba",
-    "description": "Nueva prueba",
-    "code": "kss",
-    "price": 1812,
+    "title": "Book Title 10",
+    "description": "Description for Book 10",
+    "code": "B10C10",
+    "price": 16,
     "status": true,
-    "stock": 15,
-    "category": "nosee",
-    "thumbnail": []
-  },
-  {
-    "id": 12,
-    "title": "Nueva prueba",
-    "description": "Nueva prueba",
-    "code": "ksssss",
-    "price": 1812,
-    "status": true,
-    "stock": 15,
-    "category": "nosee",
-    "thumbnail": []
+    "stock": 28,
+    "category": "Sci-Fi",
+    "thumbnail": [
+      "https://example.com/book10.jpg"
+    ]
   }
 ]
