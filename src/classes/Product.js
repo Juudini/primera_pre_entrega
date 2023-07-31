@@ -1,3 +1,5 @@
+import { InvalidArgValuesError } from "../utils/errors.js";
+
 export class Product {
     constructor(
         title,
@@ -25,7 +27,7 @@ export class Product {
             !Array.isArray(thumbnail) ||
             !thumbnail.every((item) => typeof item === "string")
         ) {
-            throw new Error("Error: Invalid argument values");
+            throw new InvalidArgValuesError("Invalid argument values");
         }
         this.id = 0;
         this.title = title;
