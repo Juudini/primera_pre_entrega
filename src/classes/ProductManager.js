@@ -9,6 +9,7 @@ import {
     ProductNotFoundError,
     SaveToFileError,
     UpdateProductError,
+    InvalidArgValuesError,
 } from "../utils/errors.js";
 
 export class ProductManager {
@@ -27,7 +28,7 @@ export class ProductManager {
             this.products = [];
         } catch (error) {
             throw new LoadFromFileError(
-                "Failed to load products from file",
+                "Failed to load products from file.",
                 error
             );
         }
@@ -37,9 +38,11 @@ export class ProductManager {
         const data = JSON.stringify(this.products, null, 2);
         try {
             await fs.promises.writeFile(this.path, data);
-            console.log("Products have been saved to file.");
         } catch (error) {
-            throw new SaveToFileError("Failed to save products to file", error);
+            throw new SaveToFileError(
+                "Failed to save products to file.",
+                error
+            );
         }
     }
     #nextId() {
@@ -73,21 +76,23 @@ export class ProductManager {
                 newProduct.category,
                 newProduct.thumbnail
             );
-            product.status = true;
             product.id = this.#nextId();
+            product.status = true;
 
             this.products.push(product);
             await this.#saveToFile();
-            return { message: "Product has been successfully added" };
+            return { message: "Product successfully added." };
         } catch (error) {
             if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof InvalidArgValuesError) {
                 throw error;
             } else if (error instanceof DuplicatedProductError) {
                 throw error;
             } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new GetProductError("Failed to add the new product", error);
+            throw new GetProductError("Failed to add the new product.", error);
         }
     }
 
@@ -99,7 +104,7 @@ export class ProductManager {
             if (error instanceof LoadToFileError) {
                 throw error;
             }
-            throw new GetProductError("Failed to get products", error);
+            throw new GetProductError("Failed to get products.", error);
         }
     }
     async getProductById(id) {
@@ -109,7 +114,7 @@ export class ProductManager {
                 (product) => product.id === Number(id)
             );
             if (!product) {
-                throw new ProductNotFound(
+                throw new ProductNotFoundError(
                     `Product with ID ${Number(id)} not found`
                 );
             }
@@ -117,10 +122,13 @@ export class ProductManager {
         } catch (error) {
             if (error instanceof LoadFromFileError) {
                 throw error;
-            } else if (error instanceof ProductNotFound) {
+            } else if (error instanceof ProductNotFoundError) {
                 throw error;
             }
-            throw new GetProductByIdError("Failed to get product by id", error);
+            throw new GetProductByIdError(
+                "Failed to get product by id.",
+                error
+            );
         }
     }
 
@@ -134,6 +142,25 @@ export class ProductManager {
 
             if (!productToUpdate) {
                 throw new ProductNotFoundError("Not Found");
+            }
+
+            if (
+                typeof newData.title !== "string" ||
+                newData.title.trim() === "" ||
+                typeof newData.description !== "string" ||
+                newData.description.trim() === "" ||
+                typeof newData.code !== "string" ||
+                typeof newData.price !== "number" ||
+                isNaN(newData.price) ||
+                newData.code.trim() === "" ||
+                typeof newData.status !== "boolean" ||
+                typeof newData.stock !== "number" ||
+                typeof newData.category !== "string" ||
+                isNaN(newData.stock) ||
+                !Array.isArray(newData.thumbnail) ||
+                !newData.thumbnail.every((item) => typeof item === "string")
+            ) {
+                throw new InvalidArgValuesError("Invalid argument values");
             }
 
             const validKeys = [
@@ -156,16 +183,21 @@ export class ProductManager {
             Object.assign(productToUpdate, updatedData);
 
             await this.#saveToFile();
-            return { message: "Product has been successfully updated" };
+            return { message: "Product successfully updated." };
         } catch (error) {
             if (error instanceof LoadFromFileError) {
                 throw error;
             } else if (error instanceof ProductNotFoundError) {
                 throw error;
+            } else if (error instanceof InvalidArgValuesError) {
+                throw error;
             } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new UpdateProductError("Failed to update the product", error);
+            throw new UpdateProductError(
+                "Failed to update the product.",
+                error
+            );
         }
     }
 
@@ -182,7 +214,7 @@ export class ProductManager {
             this.products.splice(index, 1);
 
             await this.#saveToFile();
-            return { message: "Product has been deleted successfully" };
+            return { message: "Product successfully deleted." };
         } catch (error) {
             if (error instanceof LoadFromFileError) {
                 throw error;
@@ -191,7 +223,10 @@ export class ProductManager {
             } else if (error instanceof SaveToFileError) {
                 throw error;
             }
-            throw new DeleteProductError("Failed to delete the product", error);
+            throw new DeleteProductError(
+                "Failed to delete the product.",
+                error
+            );
         }
     }
 }
