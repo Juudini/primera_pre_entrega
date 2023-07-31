@@ -1,5 +1,9 @@
 import { CartManager } from "../classes/CartManager.js";
-import { CartNotFoundError } from "../utils/errors.js";
+import {
+    CartNotFoundError,
+    EmptyCartError,
+    ProductNotFoundError,
+} from "../utils/errors.js";
 const manager = new CartManager();
 
 export const getProducts = async (req, res) => {
@@ -10,6 +14,8 @@ export const getProducts = async (req, res) => {
     } catch (error) {
         if (error instanceof CartNotFoundError) {
             return res.status(404).json({ message: "Cart not found" });
+        } else if (error instanceof EmptyCartError) {
+            return res.status(400).json({ message: "The cart is empty" });
         }
         return res.status(500).json({
             message: "Something goes wrong",
@@ -35,6 +41,15 @@ export const addProduct = async (req, res) => {
         const response = await manager.addProductToCart(cartId, productId);
         res.send(response);
     } catch (error) {
+        if (error instanceof CartNotFoundError) {
+            return res.status(404).json({
+                message: "Cart not found",
+            });
+        } else if (error instanceof ProductNotFoundError) {
+            return res.status(404).json({
+                message: "Product not found",
+            });
+        }
         return res.status(500).json({
             message: "Something goes wrong",
         });
