@@ -1,6 +1,7 @@
 import { ProductManager } from "../classes/ProductManager.js";
 import {
     DuplicatedProductError,
+    InvalidArgValuesError,
     ProductNotFoundError,
 } from "../utils/errors.js";
 
@@ -47,7 +48,9 @@ export const addProduct = async (req, res) => {
 
         res.json(response);
     } catch (error) {
-        if (error instanceof DuplicatedProductError) {
+        if (error instanceof InvalidArgValuesError) {
+            return res.status(400).json({ message: "Invalid argument values" });
+        } else if (error instanceof DuplicatedProductError) {
             return res.status(400).json({ message: "Duplicated Product" });
         }
         return res.status(500).json({ message: "Something went wrong" });
@@ -66,6 +69,8 @@ export const updateProduct = async (req, res) => {
     } catch (error) {
         if (error instanceof ProductNotFoundError) {
             return res.status(404).json({ message: "Product not found" });
+        } else if (error instanceof InvalidArgValuesError) {
+            return res.status(400).json({ message: "Invalid argument values" });
         }
         return res.status(500).json({ message: "Something went wrong" });
     }
