@@ -5,6 +5,8 @@ import {
     GetCartByIdError,
     LoadFromFileError,
     SaveToFileError,
+    EmptyCartError,
+    ProductNotFoundError,
 } from "../utils/errors.js";
 import { Cart } from "./Cart.js";
 import { ProductManager } from "./ProductManager.js";
@@ -46,7 +48,6 @@ export class CartManager {
         const data = JSON.stringify(this.carts, null, 2);
         try {
             await fs.promises.writeFile(this.path, data);
-            console.log("Products have been saved to file.");
         } catch (error) {
             throw new SaveToFileError("Failed to save products to file.");
         }
@@ -59,9 +60,11 @@ export class CartManager {
             const newCart = new Cart(newCartId);
             this.carts.push(newCart);
             await this.#saveToFile();
-            return { message: "CART has been created successfully" };
+            return { message: "CART successfully created." };
         } catch (error) {
             if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof CreateCartError) {
                 throw error;
             } else if (error instanceof SaveToFileError) {
                 throw error;
@@ -111,11 +114,15 @@ export class CartManager {
 
             await this.#saveToFile();
 
-            return { message: "PRODUCTO TO CART has been added successfully" };
+            return { message: "PRODUCTO TO CART  successfully added" };
         } catch (error) {
             if (error instanceof LoadFromFileError) {
                 throw error;
+            } else if (error instanceof CartNotFoundError) {
+                throw error;
             } else if (error instanceof ProductNotFoundError) {
+                throw error;
+            } else if (error instanceof SaveToFileError) {
                 throw error;
             }
         }
@@ -127,9 +134,14 @@ export class CartManager {
             if (!cart) {
                 throw new CartNotFoundError("Cart not found");
             }
+            if (cart.products.length === 0) {
+                throw new EmptyCartError("The cart is empty");
+            }
             return cart.products;
         } catch (error) {
             if (error instanceof LoadFromFileError) {
+                throw error;
+            } else if (error instanceof EmptyCartError) {
                 throw error;
             } else if (error instanceof CartNotFoundError) {
                 throw error;
